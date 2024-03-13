@@ -48,13 +48,14 @@ Help to build, test, and lint Python projects.
 <summary>Usage</summary>
 
 ```yaml
-    uses: advanced-security/reusable-workflows/.github/workflows/python-build.yml@main
-    with:
-      # The Action will try to determine 
-      install: true
-      build: true
-      test: true
-      lint: true
+# The Action will try to determine how to install, build, test, and lint your project.
+uses: advanced-security/reusable-workflows/.github/workflows/python-build.yml@main
+with:
+  # If you need to override the default behaviour, you can set the following options:
+  install: true
+  build: false
+  test: false
+  lint: false
 ```
 </details>
 
