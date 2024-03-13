@@ -1,0 +1,107 @@
+name: Python Build Workflow
+
+on:
+  workflow_call:
+    inputs:
+      build:
+        description: 'Build the project'
+        required: true
+        default: 'true'
+      test:
+        description: 'Run tests'
+        required: true
+        default: 'true'
+      lint:
+        description: 'Run linters'
+        required: true
+        default: 'true'
+
+    secrets:
+      token:
+        required: true
+
+jobs:
+  build:
+    # This workflow runs on the latest version of Ubuntu
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # Python versions to test against
+        # These are all the main versions of Python that are currently supported 
+        # excluding 3.8
+        python-version: ["3.9", "3.10", "3.11", "3.12"]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      
+      - name: Install dependencies
+        run: |
+          set -e
+          if [[ -f Pipfile ]]; then
+            python -m pip install --upgrade pip pipenv
+            pipenv sync -d
+          elif [[ -f requirements.txt ]]; then
+            python -m pip install --upgrade pip
+            pip install -r requirements.txt
+          elif [[ -f Makefile ]]; then
+            make install
+          else
+            echo "No requirements or Pipfile found"
+            exit 1
+          fi
+
+      - name: Run Build / Compile
+        if: ${{ github.event.inputs.build == 'true' }}
+        run: |
+          set -e
+          if [[ -f Pipfile ]]; then
+            pipenv run build
+          elif [[ -f setup.py ]]; then
+            python setup.py build
+          elif [[ -f Makefile ]]; then
+            make build
+          else
+            echo "No build script found"
+            echo "Skipping build step"
+          fi
+
+      - name: Run Linters
+        if: ${{ github.event.inputs.lint == 'true' }}
+        run: |
+          set -e
+          export PYTHONPATH=$PWD/src
+
+          if [[ -f Pipfile ]]; then
+            pipenv run lint
+          elif [[ -f setup.py ]]; then
+            python setup.py lint
+          elif [[ -f Makefile ]]; then
+            make lint
+          else
+            echo "No lint script found"
+            echo "Skipping lint step"
+          fi
+
+      - name: Run Tests
+        if: ${{ github.event.inputs.test == 'true' }}
+        run: |
+          set -e
+          export PYTHONPATH=$PWD/src
+
+          if [[ -f Pipfile ]]; then
+            pipenv run tests
+          elif [[ -f setup.py ]]; then
+            python setup.py tests
+          elif [[ -f Makefile ]]; then
+            make tests
+          else
+            echo "No test script found"
+            echo "Skipping test step"
+          fi
