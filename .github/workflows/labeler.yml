@@ -2,12 +2,6 @@ name: Labeler
 
 on:
   workflow_call:
-    inputs:
-      version:
-        description: 'The version of the labeler action to use'
-        required: true
-        type: string
-        default: 'v5'
     secrets:
       token:
         required: true
@@ -23,6 +17,21 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
 
-    - uses: "actions/labeler@${{ github.event.inputs.version }}"
+    # Check if the .github/labeler.yml file exists
+    - name: Check for labeler configuration
+      id: labeler-config
+      run: |
+        if [ -f ./.github/labeler.yml ]; then
+          echo "Labeler configuration found"
+          echo "::set-output name=config::./.github/labeler.yml"
+        else
+          echo "No local labeler configuration found"
+          echo "Using default configuration"
+          # Get configuration from current action repository
+          echo "::set-output name=config::${{ github.action_path }}/.github/labeler.yml"
+        fi
+
+    - uses: "actions/labeler@v5"
       with:
         repo-token: "${{ secrets.GITHUB_TOKEN }}"
+        configuration-path: "${{ steps.labeler-config.outputs.config }}"
