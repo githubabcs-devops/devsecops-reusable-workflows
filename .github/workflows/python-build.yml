@@ -5,15 +5,15 @@ on:
     inputs:
       build:
         description: 'Build the project'
-        required: true
+        type: bool
         default: 'true'
       test:
         description: 'Run tests'
-        required: true
+        type: bool
         default: 'true'
       lint:
         description: 'Run linters'
-        required: true
+        type: bool
         default: 'true'
 
     secrets:
