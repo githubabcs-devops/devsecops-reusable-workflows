@@ -37,7 +37,7 @@ jobs:
           echo "Using default configuration"
           # Get configuration from current action repository
 
-          cat >${{ github.event.inputs.configuration-path }} <<EOL
+          cat >.github/labeler.yml <<EOL
           docs:
           - changed-files:
             - any-glob-to-any-file: 'docs/*'
