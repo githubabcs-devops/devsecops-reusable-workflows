@@ -2,9 +2,11 @@ name: Labeler
 
 on:
   workflow_call:
-    secrets:
-      token:
-        required: true
+    inputs:
+      configuration-path:
+        description: "Path to the labeler configuration file"
+        required: false
+        type: string
 
 permissions:
   contents: read
