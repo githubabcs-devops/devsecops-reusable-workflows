@@ -21,11 +21,22 @@ Automatically label pull requests based on the paths that were modified.
 <details>
 <summary>Usage</summary>
 
+**Simple:**
+
 ```yaml
 uses: advanced-security/reusable-workflows/.github/workflows/labeler.yml@main
-with:
-  version: v5  # default: v5
+secrets: inherit
 ```
+
+**With Settings:**
+
+```yaml
+uses: advanced-security/reusable-workflows/.github/workflows/labeler.yml@main
+secrets: inherit
+with:
+  version: v5
+```
+
 </details>
 
 ### [Dependency Review][workflow-dependency-review]
@@ -35,9 +46,13 @@ Making Dependency Review easy for your projects to use and maintain.
 <details>
 <summary>Usage</summary>
 
+**Simple:**
+
 ```yaml
 uses: advanced-security/reusable-workflows/.github/workflows/dependency-review.yml@main
+secrets: inherit
 ```
+
 </details>
 
 ### [Python - Build][workflow-python-build]
@@ -47,16 +62,26 @@ Help to build, test, and lint Python projects.
 <details>
 <summary>Usage</summary>
 
+The Action will try to determine how to install, build, test, and lint your project.
+
+**Simple:**
+
 ```yaml
-# The Action will try to determine how to install, build, test, and lint your project.
+uses: advanced-security/reusable-workflows/.github/workflows/python-build.yml@main
+```
+
+**With Settings:**
+
+```yaml
 uses: advanced-security/reusable-workflows/.github/workflows/python-build.yml@main
 with:
-  # If you need to override the default behaviour, you can set the following options:
-  install: true
-  build: false
-  test: false
-  lint: false
+  install: true  # Install dependencies (default is true)
+  build: false   # Build the project
+  test: false    # Run tests
+  lint: false    # Run linter
+
 ```
+
 </details>
 
 
