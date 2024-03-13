@@ -24,7 +24,7 @@ jobs:
     - name: Check for labeler configuration
       id: labeler-config
       run: |
-        if [ -f ./.github/labeler.yml ]; then
+        if [ -f .github/labeler.yml ]; then
           echo "Labeler configuration found"
           echo "config=./.github/labeler.yml" >> $GITHUB_STATE
 
@@ -36,11 +36,21 @@ jobs:
           echo "No local labeler configuration found"
           echo "Using default configuration"
           # Get configuration from current action repository
-          # echo "config=${{ github.action_path }}/.github/labeler.yml" >> $GITHUB_STATE
-          echo "config=${{ github.event.inputs.configuration-path }}" >> $GITHUB_STATE
+
+          cat >${{ github.event.inputs.configuration-path }} <<EOL
+          docs:
+          - changed-files:
+            - any-glob-to-any-file: 'docs/*'
+
+          actions:
+          - changed-files:
+            - any-glob-to-any-file: '.github/workflows/*'
+          EOL
+
         fi
 
     - uses: "actions/labeler@v5"
       with:
         repo-token: "${{ secrets.GITHUB_TOKEN }}"
         configuration-path: "${{ steps.labeler-config.outputs.config }}"
+        sync-labels: true
