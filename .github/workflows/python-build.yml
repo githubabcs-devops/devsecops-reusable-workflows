@@ -3,18 +3,22 @@ name: Python Build Workflow
 on:
   workflow_call:
     inputs:
+      install:
+        description: 'Install dependencies'
+        type: string
+        default: 'true'
       build:
         description: 'Build the project'
-        type: bool
-        default: 'true'
+        type: string
+        default: 'false'
       test:
         description: 'Run tests'
-        type: bool
-        default: 'true'
+        type: string
+        default: 'false'
       lint:
         description: 'Run linters'
-        type: bool
-        default: 'true'
+        type: string
+        default: 'false'
 
     secrets:
       token:
@@ -42,6 +46,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
       
       - name: Install dependencies
+        if: ${{ github.event.inputs.install == 'true' }}
         run: |
           set -e
           if [[ -f Pipfile ]]; then
