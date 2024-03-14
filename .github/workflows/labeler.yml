@@ -38,7 +38,7 @@ jobs:
           echo "Downloading configuration file from advanced-security/reusable-workflows repository"
 
           # download file using gh cli
-          gh api repos/advanced-security/reusable-workflows/contents/.github/labeler.yml --raw-field "ref=main" > .github/labeler.yml
+          gh api repos/advanced-security/reusable-workflows/contents/.github/labeler.yml -q '.content' | base64 -d > .github/labeler.yml
           echo "config=./.github/labeler.yml" >> $GITHUB_STATE
 
         fi
