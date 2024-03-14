@@ -23,6 +23,8 @@ jobs:
     # Check if the .github/labeler.yml file exists
     - name: Check for labeler configuration
       id: labeler-config
+      env:
+        GH_TOKEN: ${{ github.token }}
       run: |
         set -e
         if [ -f .github/labeler.yml ]; then
