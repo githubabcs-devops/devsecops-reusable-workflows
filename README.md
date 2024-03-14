@@ -57,6 +57,7 @@ Lint markdown files in your repository.
 
 ```yaml
 uses: advanced-security/reusable-workflows/.github/workflows/markdown-lint.yml@main
+secrets: inherit
 ```
 
 </details>
