@@ -14,7 +14,7 @@ This repository contains a number of Reusable [GitHub Actions][github-actions] W
 
 ## ✨ Features
 
-### [Labeler][workflow-labeler]
+### :construction: [Labeler][workflow-labeler]
 
 Automatically label pull requests based on the paths that were modified.
 
@@ -26,15 +26,6 @@ Automatically label pull requests based on the paths that were modified.
 ```yaml
 uses: advanced-security/reusable-workflows/.github/workflows/labeler.yml@main
 secrets: inherit
-```
-
-**With Settings:**
-
-```yaml
-uses: advanced-security/reusable-workflows/.github/workflows/labeler.yml@main
-secrets: inherit
-with:
-  version: v5
 ```
 
 </details>
