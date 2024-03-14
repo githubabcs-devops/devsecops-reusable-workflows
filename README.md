@@ -14,7 +14,7 @@ This repository contains a number of Reusable [GitHub Actions][github-actions] W
 
 ## ✨ Features
 
-### :construction: [Labeler][workflow-labeler]
+### [Labeler][workflow-labeler]
 
 Automatically label pull requests based on the paths that were modified.
 
