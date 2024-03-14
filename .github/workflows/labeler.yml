@@ -33,20 +33,9 @@ jobs:
           echo "config=${{ github.event.inputs.configuration-path }}" >> $GITHUB_STATE
 
         else
-          echo "No local labeler configuration found"
-          echo "Using default configuration"
+          echo "::error::No labeler configuration found"
           # Get configuration from current action repository
-
-          cat > ./.github/labeler.yml << EOL
-          docs:
-          - changed-files:
-            - any-glob-to-any-file: 'docs/*'
-
-          actions:
-          - changed-files:
-            - any-glob-to-any-file: '.github/workflows/*'
-          EOL
-
+          exit 1
         fi
 
     - uses: "actions/labeler@v5"
