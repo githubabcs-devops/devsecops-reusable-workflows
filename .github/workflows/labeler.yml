@@ -36,6 +36,7 @@ jobs:
           echo "::error::No labeler configuration found"
           # Get configuration from current action repository
           exit 1
+
         fi
 
     - uses: "actions/labeler@v5"
