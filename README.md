@@ -55,6 +55,21 @@ secrets: inherit
 
 </details>
 
+### [Markdown - Linting][workflow-markdown-lint]
+
+Lint markdown files in your repository.
+
+<details>
+<summary>Usage</summary>
+
+**Simple:**
+
+```yaml
+uses: advanced-security/reusable-workflows/.github/workflows/markdown-lint.yml@main
+```
+
+</details>
+
 ### [Python - Build][workflow-python-build]
 
 Help to build, test, and lint Python projects.
@@ -106,5 +121,6 @@ Please refer to [MIT][license] for the full terms.
 [license]: ./LICENSE
 
 [workflow-dependency-review]: ./.github/workflows/dependency-review.yml
+[workflow-markdown-lint]: ./.github/workflows/markdown-lint.yml
 [workflow-python-build]: ./.github/workflows/python-build.yml
 [workflow-labeler]: ./.github/workflows/labeler.yml
