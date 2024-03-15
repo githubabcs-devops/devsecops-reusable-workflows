@@ -80,8 +80,8 @@ with:
   version: v1.0.0
   # Select the Dockerfile to use
   container-file: Dockerfile     # Defaults to `Dockerfile`
-  
 ```
+</details>
 
 ### [Markdown - Linting][workflow-markdown-lint]
 
