@@ -6,7 +6,6 @@ updates:
     schedule:
       interval: "weekly"
     target-branch: "main"
-    versioning-strategy: increase-if-necessary
     commit-message:
       prefix: deps
       prefix-development: chore
@@ -24,7 +23,6 @@ updates:
     schedule:
       interval: "weekly"
     target-branch: "main"
-    versioning-strategy: increase-if-necessary
     commit-message:
       prefix: deps
       prefix-development: chore
