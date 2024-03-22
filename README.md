@@ -4,7 +4,7 @@
 [![GitHub](https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)][github]
 [![GitHub Issues](https://img.shields.io/github/issues/advanced-security/reusable-workflows?style=for-the-badge)][github-issues]
 [![GitHub Stars](https://img.shields.io/github/stars/advanced-security/reusable-workflows?style=for-the-badge)][github]
-[![Licence](https://img.shields.io/github/license/Ileriayo/markdown-badges?style=for-the-badge)][license]
+[![License](https://img.shields.io/github/license/Ileriayo/markdown-badges?style=for-the-badge)][license]
 
 </div>
 
