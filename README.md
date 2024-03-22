@@ -14,120 +14,7 @@ This repository contains a number of Reusable [GitHub Actions][github-actions] W
 
 ## ✨ Features
 
-### :construction: [Labeler][workflow-labeler]
-
-Automatically label pull requests based on the paths that were modified.
-
-<details>
-<summary>Usage</summary>
-
-**Simple:**
-
-```yaml
-uses: advanced-security/reusable-workflows/.github/workflows/labeler.yml@main
-secrets: inherit
-```
-
-</details>
-
-### [Dependency Review][workflow-dependency-review]
-
-Making Dependency Review easy for your projects to use and maintain.
-
-<details>
-<summary>Usage</summary>
-
-**Simple:**
-
-```yaml
-uses: advanced-security/reusable-workflows/.github/workflows/dependency-review.yml@main
-secrets: inherit
-```
-
-</details>
-
-### [Container - Build / Publish][workflow-python-build]
-
-This workflow will build and publish a container image to the GitHub Container Registry.
-This workflow does the following:
-
-- Setup Docker / Buildx
-- Configure GitHub Container Registry and tagging image
-- Build and push the container image
-- Generate a SBOM (Software Bill of Materials) for the container image and upload them to GitHub
-
-<details>
-<summary>Usage</summary>
-
-**Simple:**
-
-```yaml
-uses: advanced-security/reusable-workflows/.github/workflows/container.yml@main
-secrets: inherit
-with:
-  # This is used for tagging the container image.
-  # It will automatically also set `latest` / `main` + major version `v1` tags.
-  version: v1.0.0
-```
-
-**With Settings:**
-
-```yaml
-uses: advanced-security/reusable-workflows/.github/workflows/container.yml@main
-secrets: inherit
-with:
-  # This is used for tagging the container image
-  version: v1.0.0
-  # Select the Dockerfile to use
-  container-file: Dockerfile     # Defaults to `Dockerfile`
-```
-</details>
-
-### [Markdown - Linting][workflow-markdown-lint]
-
-Lint markdown files in your repository.
-
-<details>
-<summary>Usage</summary>
-
-**Simple:**
-
-```yaml
-uses: advanced-security/reusable-workflows/.github/workflows/markdown-lint.yml@main
-secrets: inherit
-```
-
-</details>
-
-### [Python - Build][workflow-python-build]
-
-Help to build, test, and lint Python projects.
-
-<details>
-<summary>Usage</summary>
-
-The Action will try to determine how to install, build, test, and lint your project.
-
-**Simple:**
-
-```yaml
-uses: advanced-security/reusable-workflows/.github/workflows/python-build.yml@main
-```
-
-**With Settings:**
-
-```yaml
-uses: advanced-security/reusable-workflows/.github/workflows/python-build.yml@main
-with:
-  install: true  # Install dependencies (default is true)
-  build: false   # Build the project
-  test: false    # Run tests
-  lint: false    # Run linter
-
-```
-
-</details>
-
+[Checkout the Wiki for more information on each workflow.][github-wiki].
 
 ## Maintainers / Contributors
 
@@ -145,11 +32,7 @@ Please refer to [MIT][license] for the full terms.
 <!-- Resources -->
 [github]: https://github.com/advanced-security/reusable-workflows
 [github-issues]: https://github.com/advanced-security/reusable-workflows/issues
+[github-wiki]: https://github.com/advanced-security/reusable-workflows/wiki
 [advanced-security-org]: https://github.com/advanced-security
 [github-actions]: https://docs.github.com/en/enterprise-cloud@latest/actions
 [license]: ./LICENSE
-
-[workflow-dependency-review]: ./.github/workflows/dependency-review.yml
-[workflow-markdown-lint]: ./.github/workflows/markdown-lint.yml
-[workflow-python-build]: ./.github/workflows/python-build.yml
-[workflow-labeler]: ./.github/workflows/labeler.yml
