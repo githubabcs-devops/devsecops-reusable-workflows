@@ -2,9 +2,6 @@ name: 'Dependency Review'
 
 on:
   workflow_call:
-    secrets:
-      token:
-        required: true
 
 permissions:
   contents: read
