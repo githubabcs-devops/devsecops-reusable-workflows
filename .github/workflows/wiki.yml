@@ -1,0 +1,21 @@
+name: "Publish Wiki"
+
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - wiki/**
+      - .github/workflows/wiki.yml
+
+
+permissions:
+  contents: write
+
+jobs:
+  publish-wiki:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      
+      - uses: Andrew-Chen-Wang/github-wiki-action@50650fccf3a10f741995523cf9708c53cec8912a
