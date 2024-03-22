@@ -18,7 +18,7 @@ This repository contains a number of Reusable [GitHub Actions][github-actions] W
 
 ## Maintainers / Contributors
 
-- [@GeekMasher](https://github.com/GeekMasher) - Author / Core Maintainer
+- Advanced Security OSS Maintainers Team
 
 ## Support
 
