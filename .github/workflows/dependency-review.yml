@@ -16,6 +16,8 @@ jobs:
 
       - name: 'Check for configuration file'
         id: check-config
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           set -e
           if [ -f "./.github/dependency-review.yml" ]; then
