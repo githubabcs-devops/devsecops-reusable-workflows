@@ -29,7 +29,7 @@ jobs:
             echo "Downloading configuration file from advanced-security/reusable-workflows repository"
 
             # download file using gh cli
-            gh api repos/advanced-security/reusable-workflows/contents/.github/dependency-review.yml --raw-field "ref=main" > .github/dependency-review.yml
+            gh api repos/advanced-security/reusable-workflows/contents/.github/dependency-review.yml -q '.content' | base64 -d > .github/dependency-review.yml
             echo "config=./.github/dependency-review.yml" >> $GITHUB_STATE
 
           fi
