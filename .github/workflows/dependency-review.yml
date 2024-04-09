@@ -15,27 +15,23 @@ jobs:
         uses: actions/checkout@v4
 
       - name: 'Check for configuration file'
-        id: check-config
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -e
           if [ -f "./.github/dependency-review.yml" ]; then
             echo "Found local configuration file"
-            echo "config=./.github/labeler.yml" >> $GITHUB_STATE
-
           else
             echo "No local configuration file found"
             echo "Downloading configuration file from advanced-security/reusable-workflows repository"
 
             # download file using gh cli
             gh api repos/advanced-security/reusable-workflows/contents/.github/dependency-review.yml -q '.content' | base64 -d > .github/dependency-review.yml
-            echo "config=./.github/dependency-review.yml" >> $GITHUB_STATE
 
           fi
 
       - name: 'Dependency Review'
         uses: actions/dependency-review-action@v4
         with:
+          config-file: './.github/dependency-review.yml'
           comment-summary-in-pr: "always"
-          config-file: '${{ steps.check-config.outputs.config }}'
