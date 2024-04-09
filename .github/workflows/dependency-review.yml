@@ -37,4 +37,5 @@ jobs:
       - name: 'Dependency Review'
         uses: actions/dependency-review-action@v4
         with:
+          comment-summary-in-pr: "always"
           config-file: '${{ steps.check-config.outputs.config }}'
