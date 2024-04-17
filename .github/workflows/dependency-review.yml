@@ -1,3 +1,7 @@
+# 'Dependency Review' Reusable Workflow
+#
+# Note: Override the default configuration by providing a './.github/dependency-review.yml' in your repo.
+
 name: 'Dependency Review'
 
 on:
