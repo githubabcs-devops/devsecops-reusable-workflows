@@ -157,7 +157,7 @@ jobs:
       packages: read
 
     steps:
-      - uses: sigstore/cosign-installer@v3.4.0
+      - uses: sigstore/cosign-installer@v3.5.0
         with:
           cosign-release: 'v2.2.2'
 
