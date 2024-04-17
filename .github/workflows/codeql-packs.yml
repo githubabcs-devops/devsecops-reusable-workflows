@@ -1,0 +1,65 @@
+name: CodeQL Pack Builder and Publisher
+
+on:
+  workflow_call:
+    inputs:
+      packs:
+        description: 'List of paths to packs to build and publish (example: "pack1,./ql/pack2")'
+        required: true
+        type: string
+    
+jobs:
+  create-matrix:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.packs }}
+
+    steps:
+      - name: "Set Matrix"
+        id: set-matrix
+        uses: actions/github-script@v4
+        with:
+          script: |
+            const packs = '${{ inputs.packs }}'.split(',');
+            packs.forEach((pack, index) => {
+              if (pack.endsWith('qlpack.yml')) {
+                packs[index] = pack.slice(0, -10);
+              }
+            });
+            return JSON.stringify(packs);
+
+  build:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      packages: write
+
+    strategy:
+      fail-fast: false
+      matrix: 
+        packs: ${{ fromJSON(needs.create-matrix.outputs.packs) }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: "Build and Publish CodeQL Packs"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          PACK_PATH="${{ matrix.packs }}/qlpack.yml"
+          CURRENT_VERSION=$(grep version $PACK_PATH | awk '{print $2}')
+          PACK_FULLNAME=$(cat $PACK_PATH | grep "name:" | awk '{print $2}')
+          PACK_NAME=$(echo $PACK_FULLNAME | awk -F '/' '{print $2}')
+
+          PUBLISHED_VERSION=$(gh api /orgs/${{ github.repository_owner }}/packages/container/$PACK_NAME/versions --jq '.[0].metadata.container.tags[0]')
+          echo "Packs :: ${CURRENT_VERSION} -> ${PUBLISHED_VERSION}"
+
+          if [ "$PUBLISHED_VERSION" != "$CURRENT_VERSION" ]; then
+            gh extension install github/gh-codeql
+            gh codeql pack install "${{ matrix.packs }}"
+            gh codeql pack publish "${{ matrix.packs }}"
+          fi
+
+      
