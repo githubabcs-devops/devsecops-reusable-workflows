@@ -9,5 +9,52 @@ fail-on-severity: moderate
 # Set what scope to fail on.
 fail-on-scopes: runtime
 
-# Here is the list of licenses we want to deny and not use in our software. 
-deny-licenses: GPL-1.0-only,GPL-1.0-or-later,GPL-2.0-only,GPL-2.0-or-later,GPL-3.0-only,GPL-3.0-or-later,AGPL-1.0-only,AGPL-1.0-or-later,AGPL-3.0-only,AGPL-3.0-or-later,LGPL-2.0-only,LGPL-2.0-or-later,LGPL-2.1-only,LGPL-2.1-or-later,LGPL-3.0-only,LGPL-3.0-or-later
+# Use only certain licenses
+allow_licenses:
+  - 'BSD-2-Clause-Patent'
+  - 'ADSL'
+  - 'Apache-2.0'
+  - 'APAFML'
+  - 'BSD-1-Clause'
+  - 'BSD-2-Clause'
+  - 'BSD-2-Clause-FreeBSD'
+  - 'BSD-2-Clause-NetBSD'
+  - 'BSD-2-Clause-Views'
+  - 'BSL-1.0'
+  - 'DSDP'
+  - 'ECL-1.0'
+  - 'ECL-2.0'
+  - 'ImageMagick'
+  - 'ISC'
+  - 'Linux-OpenIB'
+  - 'MIT'
+  - 'MIT-Modern-Variant'
+  - 'MS-PL'
+  - 'MulanPSL-1.0'
+  - 'Mup'
+  - 'PostgreSQL'
+  - 'Spencer-99'
+  - 'UPL-1.0'
+  - 'Xerox'
+
+# Here is a sample list of licenses we want to deny and not use in our software.
+# deny-licenses:
+#   # GPL licenses
+#   - GPL-1.0-only
+#   - GPL-1.0-or-later
+#   - GPL-2.0-only
+#   - GPL-2.0-or-later
+#   - GPL-3.0-only
+#   - GPL-3.0-or-later
+#   # AGPL licenses
+#   - AGPL-1.0-only
+#   - AGPL-1.0-or-later
+#   - AGPL-3.0-only
+#   - AGPL-3.0-or-later
+#   # LGPL licenses
+#   - LGPL-2.0-only
+#   - LGPL-2.0-or-later
+#   - LGPL-2.1-only
+#   - LGPL-2.1-or-later
+#   - LGPL-3.0-only
+#   - LGPL-3.0-or-later
