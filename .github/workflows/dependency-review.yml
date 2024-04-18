@@ -32,7 +32,7 @@ jobs:
             echo "No local configuration file found"
             echo "Using configuration file from advanced-security/reusable-workflows repository"
 
-            echo "config=advanced-security/reusable-workflows.github/dependency-review.yml@main" >> $GITHUB_STATE
+            echo "config=advanced-security/reusable-workflows/.github/dependency-review.yml@main" >> $GITHUB_STATE
 
           fi
 
