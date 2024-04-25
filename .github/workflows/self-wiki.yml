@@ -1,4 +1,4 @@
-name: "Publish Wiki"
+name: "Self - Publish Wiki"
 
 on:
   push:
