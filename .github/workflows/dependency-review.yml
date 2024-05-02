@@ -26,7 +26,8 @@ jobs:
           set -e
           if [ -f "./.github/dependency-review.yml" ]; then
             echo "Found local configuration file"
-            echo "config=./.github/labeler.yml" >> $GITHUB_STATE
+
+            echo "config=./.github/dependency-review.yml" >> $GITHUB_STATE
 
           else
             echo "No local configuration file found"
