@@ -1,8 +1,9 @@
 name: CodeQL IaC Scanning
 
 on:
+  pull_request:
   workflow_call:
-    
+
 jobs:
   analysis:
     runs-on: ubuntu-latest
