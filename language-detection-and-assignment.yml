@@ -37,24 +37,20 @@ jobs:
 
       - name: Assign for Java, Kotlin, JavaScript, TypeScript, Go
         if: steps.detect-languages.outputs.java == 'true' || steps.detect-languages.outputs.kotlin == 'true' || steps.detect-languages.outputs.javascript == 'true' || steps.detect-languages.outputs.typescript == 'true' || steps.detect-languages.outputs.go == 'true'
-        uses: peter-evans/assign@v1
-        with:
-          users: adrienpessu
+        run: |
+          gh pr edit ${{ github.event.number }} --add-reviewer adrienpessu
 
       - name: Assign for Python, Go, CodeQL, Rust
         if: steps.detect-languages.outputs.python == 'true' || steps.detect-languages.outputs.go == 'true' || steps.detect-languages.outputs.codeql == 'true' || steps.detect-languages.outputs.rust == 'true'
-        uses: peter-evans/assign@v1
-        with:
-          users: Geekmasher
+        run: |
+          gh pr edit ${{ github.event.number }} --add-reviewer Geekmasher
 
       - name: Assign for Python, JavaScript, TypeScript, CodeQL
         if: steps.detect-languages.outputs.python == 'true' || steps.detect-languages.outputs.javascript == 'true' || steps.detect-languages.outputs.typescript == 'true' || steps.detect-languages.outputs.codeql == 'true'
-        uses: peter-evans/assign@v1
-        with:
-          users: felickz
+        run: |
+          gh pr edit ${{ github.event.number }} --add-reviewer felickz
 
-      - name: Assign for Java, Kotlin, JavaScript, TypeScript, Go
+      - name: Assign default
         if: steps.detect-languages.outputs.java != 'true' && steps.detect-languages.outputs.kotlin != 'true' && steps.detect-languages.outputs.javascript != 'true' && steps.detect-languages.outputs.typescript != 'true' && steps.detect-languages.outputs.go != 'true'  && steps.detect-languages.outputs.codeql != 'true' && steps.detect-languages.outputs.python != 'true'  
-        uses: peter-evans/assign@v1
-        with:
-          users: oss-maintainers
+        run: |
+          gh pr edit ${{ github.event.number }} --add-reviewer oss-maintainers
