@@ -1,0 +1,46 @@
+name: Language Detection and Assignment
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  detect-and-assign:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Detect languages
+        id: detect-languages
+        run: |
+          FILES=$(gh pr diff --name-only ${{ github.event.number }} | sed 's/.*\.//')  
+          echo "java=$(echo $FILES | grep -q "java" && echo true || echo false)" >> $GITHUB_OUTPUT
+          echo "kotlin=$(echo $FILES | grep -q "kt" && echo true || echo false)" >> $GITHUB_OUTPUT
+          echo "javascript=$(echo $FILES | grep -E "(js|jsx)" && echo true || echo false)" >> $GITHUB_OUTPUT
+          echo "typescript=$(echo $FILES | grep -E "(ts|tsx)" && echo true || echo false)" >> $GITHUB_OUTPUT
+          echo "go=$(echo $FILES | grep -q "go" && echo true || echo false)" >> $GITHUB_OUTPUT
+          echo "python=$(echo $FILES | grep -q "py" && echo true || echo false)" >> $GITHUB_OUTPUT
+          echo "rust=$(echo $FILES | grep -q "rs" && echo true || echo false)" >> $GITHUB_OUTPUT
+          echo "codeql=$(echo $FILES | grep -E "(ql|qls)" && echo true || echo false)" >> $GITHUB_OUTPUT
+          echo $GITHUB_OUTPUT
+
+      - name: Assign for Java, Kotlin, JavaScript, TypeScript, Go
+        if: steps.detect-languages.outputs.java == 'true' || steps.detect-languages.outputs.kotlin == 'true' || steps.detect-languages.outputs.javascript == 'true' || steps.detect-languages.outputs.typescript == 'true' || steps.detect-languages.outputs.go == 'true'
+        run: |
+          gh pr edit ${{ github.event.number }} --add-reviewer adrienpessu
+
+      - name: Assign for Python, Go, CodeQL, Rust
+        if: steps.detect-languages.outputs.python == 'true' || steps.detect-languages.outputs.go == 'true' || steps.detect-languages.outputs.codeql == 'true' || steps.detect-languages.outputs.rust == 'true'
+        run: |
+          gh pr edit ${{ github.event.number }} --add-reviewer Geekmasher
+
+      - name: Assign for Python, JavaScript, TypeScript, CodeQL
+        if: steps.detect-languages.outputs.python == 'true' || steps.detect-languages.outputs.javascript == 'true' || steps.detect-languages.outputs.typescript == 'true' || steps.detect-languages.outputs.codeql == 'true'
+        run: |
+          gh pr edit ${{ github.event.number }} --add-reviewer felickz
+
+      - name: Assign default
+        if: steps.detect-languages.outputs.java != 'true' && steps.detect-languages.outputs.kotlin != 'true' && steps.detect-languages.outputs.javascript != 'true' && steps.detect-languages.outputs.typescript != 'true' && steps.detect-languages.outputs.go != 'true'  && steps.detect-languages.outputs.codeql != 'true' && steps.detect-languages.outputs.python != 'true'  
+        run: |
+          gh pr edit ${{ github.event.number }} --add-reviewer oss-maintainers
