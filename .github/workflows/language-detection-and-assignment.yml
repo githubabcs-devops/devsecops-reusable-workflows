@@ -4,10 +4,11 @@ on:
   pull_request:
     branches: [main]
 
+env:
+  GH_TOKEN: ${{ secrets.GH_AP_TOKEN }}
 jobs:
   detect-and-assign:
     runs-on: ubuntu-latest
-    permissions: write-all
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -30,26 +31,18 @@ jobs:
         if: steps.detect-languages.outputs.java == 'true' || steps.detect-languages.outputs.kotlin == 'true' || steps.detect-languages.outputs.javascript == 'true' || steps.detect-languages.outputs.typescript == 'true' || steps.detect-languages.outputs.go == 'true'
         run: |
           gh pr edit ${{ github.event.number }} --add-reviewer adrienpessu
-        env:
-          GH_TOKEN: ${{ secrets.GH_AP_TOKEN }}
 
       - name: Assign for Python, Go, CodeQL, Rust
         if: steps.detect-languages.outputs.python == 'true' || steps.detect-languages.outputs.go == 'true' || steps.detect-languages.outputs.codeql == 'true' || steps.detect-languages.outputs.rust == 'true'
         run: |
           gh pr edit ${{ github.event.number }} --add-reviewer Geekmasher
-        env:
-          GH_TOKEN: ${{ secrets.GH_AP_TOKEN }}
 
       - name: Assign for Python, JavaScript, TypeScript, CodeQL
         if: steps.detect-languages.outputs.python == 'true' || steps.detect-languages.outputs.javascript == 'true' || steps.detect-languages.outputs.typescript == 'true' || steps.detect-languages.outputs.codeql == 'true'
         run: |
           gh pr edit ${{ github.event.number }} --add-reviewer felickz
-        env:
-          GH_TOKEN: ${{ secrets.GH_AP_TOKEN }}
 
       - name: Assign default
         if: steps.detect-languages.outputs.java != 'true' && steps.detect-languages.outputs.kotlin != 'true' && steps.detect-languages.outputs.javascript != 'true' && steps.detect-languages.outputs.typescript != 'true' && steps.detect-languages.outputs.go != 'true'  && steps.detect-languages.outputs.codeql != 'true' && steps.detect-languages.outputs.python != 'true'  
         run: |
-          gh pr edit ${{ github.event.number }} --add-reviewer felickz --add-reviewer Geekmasher --add-reviewer adrienpessu
-        env:
-          GH_TOKEN: ${{ secrets.GH_AP_TOKEN }}
+          gh pr edit ${{ github.event.number }} --add-reviewer oss-maintainers
