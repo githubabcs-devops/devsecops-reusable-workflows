@@ -32,12 +32,12 @@ jobs:
 
 
   python-linting:
-    # This workflow runs on the latest version of Ubuntu
     runs-on: ubuntu-latest
+    if: ${{ needs.python-verions.outputs.matrix != '[]' }}
     strategy:
       fail-fast: false
       matrix:
-        python-version: ${{ fromJson(steps.python-verions.outputs.matrix) }}
+        python-version: ${{ fromJson(needs.python-verions.outputs.matrix) }}
 
     steps:
       - name: Checkout
