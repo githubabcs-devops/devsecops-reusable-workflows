@@ -33,6 +33,7 @@ jobs:
     # This workflow runs on the latest version of Ubuntu
     runs-on: ubuntu-latest
     if: ${{ needs.python-verions.outputs.matrix != '[]' }}
+    needs: [ python-verions ]
     strategy:
       fail-fast: false
       matrix:
