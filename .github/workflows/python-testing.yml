@@ -50,6 +50,7 @@ jobs:
       - name: Install dependencies
         run: |
           set -e
+          echo "Installing dependencies..."
           if [[ -f pyproject.toml ]]; then
               python -m pip install --upgrade pip poetry
               poetry install
@@ -68,12 +69,17 @@ jobs:
       - name: Run tests
         run: |
           set -e
+          echo "Running Python tests..."
           if [[ -f pyproject.toml ]]; then
+              echo "Running poetry run test"
               poetry run test
           elif [[ -f Pipfile ]]; then
+              echo "Running pipenv run test"
               pipenv run test
           elif [[ -f Makefile ]]; then
+              echo "Running make test"
               make test
           else
+              echo "Running pytest"
               pytest
           fi
