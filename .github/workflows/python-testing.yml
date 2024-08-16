@@ -80,6 +80,6 @@ jobs:
               echo "Running make test"
               make test
           else
-              echo "Running pytest"
-              pytest
+              echo "Unknown test runner..."
+              echo "Please contact the oss-maintainers team for help."
           fi
