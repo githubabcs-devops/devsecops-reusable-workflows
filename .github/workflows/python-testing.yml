@@ -49,8 +49,31 @@ jobs:
 
       - name: Install dependencies
         run: |
-          ./${{ github.action_path }}/script/install.sh "python"
+          set -e
+          if [[ -f pyproject.toml ]]; then
+              python -m pip install --upgrade pip poetry
+              poetry install
+          elif [[ -f Pipfile ]]; then
+              python -m pip install --upgrade pip pipenv
+              pipenv sync -d
+          elif [[ -f requirements.txt ]]; then
+              python -m pip install --upgrade pip
+              pip install -r requirements.txt
+          elif [[ -f Makefile ]]; then
+              make install
+          else
+              echo "No manifest files found to install dependencies"
+          fi
       
       - name: Run tests
         run: |
-          ./${{ github.action_path }}/script/testing.sh "python"
+          set -e
+          if [[ -f pyproject.toml ]]; then
+              poetry run test
+          elif [[ -f Pipfile ]]; then
+              pipenv run test
+          elif [[ -f Makefile ]]; then
+              make test
+          else
+              pytest
+          fi

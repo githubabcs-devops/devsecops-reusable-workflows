@@ -26,11 +26,11 @@ jobs:
       - name: Set matrix
         id: set-matrix
         run: |
-          versions="${{ github.event.inputs.versions }}"
+          versions="${{ inputs.versions }}"
           echo "Version Input :: $versions"
           matrix=$(echo "$versions" | tr "," "\n" | awk '{print "\""$1"\""}' | paste -sd "," -)
           echo "matrix :: [$matrix]"
-          echo "name=matrix::[$matrix]" >> "$GITHUB_OUTPUT"
+          echo "matrix=[$matrix]" >> "$GITHUB_OUTPUT"
 
   python-linting:
     runs-on: ubuntu-latest
@@ -52,8 +52,33 @@ jobs:
       
       - name: Install dependencies
         run: |
-          ./${{ github.action_path }}/script/install.sh "python"
+          set -e
+          if [[ -f pyproject.toml ]]; then
+              python -m pip install --upgrade pip poetry
+              poetry install
+          elif [[ -f Pipfile ]]; then
+              python -m pip install --upgrade pip pipenv
+              pipenv sync -d
+          elif [[ -f requirements.txt ]]; then
+              python -m pip install --upgrade pip
+              pip install -r requirements.txt
+          elif [[ -f Makefile ]]; then
+              make install
+          else
+              echo "No manifest files found to install dependencies"
+          fi
 
       - name: Run linting
         run: |
-          ./${{ github.action_path }}/script/install.sh "python" "${{ github.event.inputs.tool }}"
+          set -e
+          TOOL="${{ inputs.tool }}"
+          if [[ "$TOOL" == "ruff" ]]; then
+              pip install ruff
+              ruff check
+          elif [[ "$TOOL" == "flake8" ]]; then
+              pip install flake8
+              flake8 .
+          elif [[ "$TOOL" == "black" ]]; then
+              pip install black
+              black --check .
+          fi
