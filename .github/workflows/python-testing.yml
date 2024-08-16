@@ -1,0 +1,76 @@
+# Python Testing Workflow
+# 
+# - Automatically runs tests on all supported versions of Python
+name: Python - Testing
+
+on:
+  pull_request:
+  workflow_call:
+    inputs:
+      versions:
+        description: 'Python versions to test against'
+        type: string
+        # All Major versions of Python that are currently supported
+        default: '3.9,3.10,3.11,3.12'
+
+jobs:
+  python-verions:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - name: Set matrix
+        id: set-matrix
+        run: |
+          versions=${{ github.event.inputs.versions }}
+          matrix=$(echo $versions | tr "," "\n" | sed 's/^//' | sed 's/$/"/' | tr "\n" "," | sed 's/,$//')
+          echo "::set-output name=matrix::$matrix"
+
+  python-testing:
+    # This workflow runs on the latest version of Ubuntu
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ${{ fromJson(steps.python-verions.outputs.matrix) }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        run: |
+          set -e
+
+          if [[ -f pyproject.toml ]]; then
+              python -m pip install --upgrade pip poetry
+              poetry install
+          elif [[ -f Pipfile ]]; then
+              python -m pip install --upgrade pip pipenv
+              pipenv sync -d
+          elif [[ -f requirements.txt ]]; then
+              python -m pip install --upgrade pip
+              pip install -r requirements.txt
+          elif [[ -f Makefile ]]; then
+              make install
+          else
+              echo "No manifest files found to install dependencies"
+          fi
+      
+      - name: Run tests
+        run: |
+          set -e
+          if [[ -f pyproject.toml ]]; then
+              poetry run test
+          elif [[ -f Pipfile ]]; then
+              pipenv run test
+          elif [[ -f Makefile ]]; then
+              make test
+          else
+              pytest
+          fi
