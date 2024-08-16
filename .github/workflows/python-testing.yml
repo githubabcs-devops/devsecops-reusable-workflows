@@ -22,8 +22,7 @@ jobs:
       - name: Set matrix
         id: set-matrix
         run: |
-          versions="${{ github.event.inputs.versions }}"
-          matrix=$(echo $versions | tr "," "\n" | sed 's/^//' | sed 's/$/"/' | tr "\n" "," | sed 's/,$//')
+          versions="${{ inputs.versions }}"
           echo "Version Input :: $versions"
           matrix=$(echo "$versions" | tr "," "\n" | awk '{print "\""$1"\""}' | paste -sd "," -)
           echo "matrix :: [$matrix]"
