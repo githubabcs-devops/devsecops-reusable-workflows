@@ -36,7 +36,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ${{ fromJson(needs.python-verions.outputs.matrix) }}
+        python-version: ${{ fromJSON(needs.python-verions.outputs.matrix) }}
 
     steps:
       - name: Checkout
