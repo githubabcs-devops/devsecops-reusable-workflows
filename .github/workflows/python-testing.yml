@@ -22,9 +22,9 @@ jobs:
       - name: Set matrix
         id: set-matrix
         run: |
-          versions=${{ github.event.inputs.versions }}
+          versions="${{ github.event.inputs.versions }}"
           matrix=$(echo $versions | tr "," "\n" | sed 's/^//' | sed 's/$/"/' | tr "\n" "," | sed 's/,$//')
-          echo "::set-output name=matrix::$matrix"
+          echo "name=matrix::$matrix" >> "$GITHUB_OUTPUT"
 
   python-testing:
     # This workflow runs on the latest version of Ubuntu
