@@ -26,7 +26,7 @@ jobs:
       - name: "Get Custom Property"
         id: get_custom_property
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ github.token }}
           PROPERTY_NAME: ${{ inputs.custom-property }}
         run: |
           set -e
@@ -40,6 +40,7 @@ jobs:
 
   python-vendoring:
     runs-on: ubuntu-latest
+    needs: [ custom-property ]
     if: ${{ needs.custom-property.outputs.osstype == 'Actions' }}
     steps:
       - name: Checkout
