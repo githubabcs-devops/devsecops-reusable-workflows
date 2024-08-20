@@ -1,0 +1,46 @@
+# GitHub Releasing Workflow
+name: GitHub - Release
+
+on:
+  push:
+  workflow_call:
+    inputs:
+      version:
+        description: "The version to release"
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      # https://github.com/peter-murray/semver-data-action
+      - name: Parse SemVer
+        id: version
+        uses: peter-murray/semver-action@v1
+        with:
+          version: ${{ inputs.version }}
+
+      # Tags :: ${Full}, v${Major}, v${Major}.${Minor}, v${Major}.${Minor}.${Patch}
+      - name: "GitHub Release"
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+
+          git tag "${{ steps.version.outputs.version }}" --force
+          git tag "v${{ steps.version.outputs.major }}" --force
+          git tag "v${{ steps.version.outputs.major }}.${{ steps.version.outputs.minor }}" --force
+          git tag "v${{ steps.version.outputs.major }}.${{ steps.version.outputs.minor }}.${{ steps.version.outputs.patch }}" --force
+
+          git push origin ${{ github.ref_name }}
+          git push origin --tags --force
+
+          gh release create --latest --generate-notes \
+            --title "v${{ needs.version-changes.outputs.version }}" \
+            "${{ needs.version-changes.outputs.version }}"
+      
