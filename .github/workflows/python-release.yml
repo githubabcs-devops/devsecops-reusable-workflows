@@ -56,31 +56,9 @@ jobs:
             echo "release=true" >> "$GITHUB_OUTPUT"
           fi
 
-  python-release:
-    runs-on: ubuntu-latest
+  github-release:
+    uses: advanced-security/reusable-workflows/.github/workflows/release.yml@v0.1.0
     needs: [ version-changes ]
-    if: ${{ needs.version-changes.outputs.release == 'true' }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      
-      - name: Set up Python ${{ inputs.version }}
-        uses: actions/setup-python@v5
-        with:
-          python-version: ${{ inputs.version }}
-
-      - name: "GitHub Release"
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          git config user.name github-actions
-          git config user.email github-actions@github.com
-
-          git tag "${{ needs.version-changes.outputs.version }}" --force
-          git push origin ${{ github.ref_name }}
-          git push origin --tags --force
-
-          gh release create --latest --generate-notes \
-            --title "v${{ needs.version-changes.outputs.version }}" \
-            "${{ needs.version-changes.outputs.version }}"
-      
+    secrets: inherit
+    with:
+      version: ${{ needs.version-changes.outputs.version }}
