@@ -16,6 +16,11 @@ on:
         # All Major versions of Python that are currently supported
         default: '3.11'
 
+permissions:
+  properties: read
+  contents: write
+  pull-requests: write
+
 jobs:
   custom-property:
     runs-on: ubuntu-latest
@@ -69,16 +74,15 @@ jobs:
           fi
         
       - name: "Update vendored dependencies (Push)"
-        if: ${{ github.event_name == 'push' }}
+        if: ${{ github.event_name == 'push' || github.event_name == 'workflow_dispatch' }}
         uses: peter-evans/create-pull-request@v6
         with:
           token: ${{ github.token }}
-          commit-message: Verify vendored dependencies
-          title: Verify vendored dependencies
-          branch: verify-vendored-dependencies
+          commit-message: "[chore]: Update vendored dependencies"
+          title: "[chore]: Update vendored dependencies"
+          branch: update-vendored-dependencies
           base: ${{ github.event.before }}
           labels: dependencies
-          delete-branch: true
           body: |
             This is an automated PR to update that vendored dependencies are up to date.
             It was created by a GitHub workflow defined in `.github/workflows/python-vendor.yml`.
