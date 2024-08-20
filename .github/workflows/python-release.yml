@@ -59,6 +59,7 @@ jobs:
   github-release:
     uses: advanced-security/reusable-workflows/.github/workflows/release.yml@v0.1.0
     needs: [ version-changes ]
+    if: ${{ needs.version-changes.outputs.release == 'true' }}
     secrets: inherit
     with:
       version: ${{ needs.version-changes.outputs.version }}
