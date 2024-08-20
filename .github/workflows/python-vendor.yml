@@ -1,0 +1,69 @@
+# Python Vendoring Workflow
+name: Python - Vendoring
+
+on:
+  push:
+  pull_request:
+  workflow_call:
+    inputs:
+      custom-property:
+        description: 'Name of the custom property to get value from'
+        type: string
+        default: 'OSSType'
+      version:
+        description: 'Python main version to vendor'
+        type: string
+        # All Major versions of Python that are currently supported
+        default: '3.11'
+
+jobs:
+  custom-property:
+    runs-on: ubuntu-latest
+    outputs:
+      osstype: ${{ steps.get_custom_property.outputs.osstype }}
+
+    steps:
+      - name: "Get Custom Property"
+        id: get_custom_property
+        run: |
+          set -e
+          PROPERTY_NAME="${{ inputs.custom-property }}"
+
+          PROPERTIES=$(gh api -H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2022-11-28" /repos/:owner/:repo/properties/values)
+          echo "Properties: '$PROPERTIES'"
+
+          REPOSITORY_TYPE=$(echo $PROPERTIES | jq -r ".[] | select(.property_name == \"$PROPERTY_NAME\") | .value")
+          echo "Repository type: '$REPOSITORY_TYPE'"
+          echo "osstype=[$REPOSITORY_TYPE]" >> "$GITHUB_OUTPUT"
+
+  python-vendoring:
+    runs-on: ubuntu-latest
+    if: ${{ needs.custom-property.outputs.osstype == 'Actions' }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      
+      - name: Set up Python ${{ inputs.version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ inputs.version }}
+      
+      - name: "Install and Vendor dependencies"
+        run: |
+          set -e
+
+          if [[ -f Pipfile ]]; then
+            python -m pip install --upgrade pip pipenv
+            pipenv run vendor
+          elif [[ -f vendor/update.sh ]]; then
+            ./vendor/update.sh
+          else
+            echo "Unknown vendoring method"
+          fi
+      
+      - name: "Verify vendored dependencies (PR)"
+        if: ${{ github.event_name == 'pull_request' }}
+        run: |
+          set -e
+
+          git diff --exit-code
