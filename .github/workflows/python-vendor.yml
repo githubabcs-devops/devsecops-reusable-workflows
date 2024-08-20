@@ -60,15 +60,33 @@ jobs:
           if [[ -f Pipfile ]]; then
             python -m pip install --upgrade pip pipenv
             pipenv run vendor
+          elif [[ -f Makefile ]]; then
+            make vendor
           elif [[ -f vendor/update.sh ]]; then
             ./vendor/update.sh
           else
             echo "Unknown vendoring method"
           fi
-      
-      - name: "Verify vendored dependencies (PR)"
-        if: ${{ github.event_name == 'pull_request' }}
-        run: |
-          set -e
-
-          git diff --exit-code
+        
+      - name: "Update vendored dependencies (Push)"
+        if: ${{ github.event_name == 'push' }}
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ github.token }}
+          commit-message: Verify vendored dependencies
+          title: Verify vendored dependencies
+          branch: verify-vendored-dependencies
+          base: ${{ github.event.before }}
+          labels: dependencies
+          delete-branch: true
+          body: |
+            This is an automated PR to update that vendored dependencies are up to date.
+            It was created by a GitHub workflow defined in `.github/workflows/python-vendor.yml`.
+            Please do not merge this PR manually.
+            <details>
+              <summary>Details</summary>
+              <p>
+                This PR was created by a workflow that runs on all pushes to the repository.
+                It installs dependencies and then verifies that the repository is clean.
+              </p>
+            </details>
