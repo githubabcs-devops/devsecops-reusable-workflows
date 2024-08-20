@@ -48,3 +48,11 @@ jobs:
     with:
       version: ${{ inputs.version }}
       custom-property: 'OSSType'
+
+  # Release a new version of the package
+  release:
+    uses: advanced-security/reusable-workflows/.github/workflows/python-release.yml@v0.1.0
+    needs: [ testing, linting ]
+    secrets: inherit
+    with:
+      version: ${{ inputs.version }}
