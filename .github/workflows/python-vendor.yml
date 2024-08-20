@@ -58,6 +58,7 @@ jobs:
           python-version: ${{ inputs.version }}
       
       - name: "Install and Vendor dependencies"
+        id: vendoring
         run: |
           set -e
 
@@ -71,9 +72,12 @@ jobs:
           else
             echo "Unknown vendoring method"
           fi
+
+          CHANGES=$(git status --porcelain | wc -l)
+          echo "changes=$CHANGES" >> "$GITHUB_OUTPUT"
         
       - name: "Update vendored dependencies (Push)"
-        if: ${{ github.event_name == 'push' || github.event_name == 'workflow_dispatch' }}
+        if: ${{ steps.vendoring.outputs.changes != 0 && (github.event_name == 'push' || github.event_name == 'workflow_dispatch') }}
         uses: peter-evans/create-pull-request@v6
         with:
           token: ${{ github.token }}
