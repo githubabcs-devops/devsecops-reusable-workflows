@@ -38,7 +38,7 @@ jobs:
 
           REPOSITORY_TYPE=$(echo $PROPERTIES | jq -r ".[] | select(.property_name == \"$PROPERTY_NAME\") | .value")
           echo "Repository type: '$REPOSITORY_TYPE'"
-          echo "osstype=[$REPOSITORY_TYPE]" >> "$GITHUB_OUTPUT"
+          echo "osstype=$REPOSITORY_TYPE" >> "$GITHUB_OUTPUT"
 
   python-vendoring:
     runs-on: ubuntu-latest
