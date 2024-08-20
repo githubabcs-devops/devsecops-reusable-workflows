@@ -20,7 +20,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       release: ${{ steps.check_release.outputs.release }}
-      version: ${{ steps.check_release.outputs.current_version }}
+      version: ${{ steps.check_release.outputs.version }}
 
     steps:
       - name: Checkout
