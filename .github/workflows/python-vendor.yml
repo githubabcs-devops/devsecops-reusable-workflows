@@ -23,6 +23,8 @@ jobs:
       osstype: ${{ steps.get_custom_property.outputs.osstype }}
 
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
       - name: "Get Custom Property"
         id: get_custom_property
         env:
