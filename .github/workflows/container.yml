@@ -92,7 +92,7 @@ jobs:
         uses: docker/build-push-action@v6.2.0
         id: build
         with:
-          file: "${{ inputs.docker-file }}"
+          file: "${{ inputs.container-file }}"
           context: .
           push: ${{ inputs.publish }}
           tags: ${{ steps.meta.outputs.tags }}
@@ -172,5 +172,5 @@ jobs:
         # This step uses the identity token to provision an ephemeral certificate against the sigstore community Fulcio instance.
         run: |
           cosign sign --yes \
-            ${{ env.IMAGE_NAME }}@${{ steps.build-and-push.outputs.digest }}
+            ${{ env.IMAGE_NAME }}@${{ needs.build-publish-image.outputs.digest }}
   
