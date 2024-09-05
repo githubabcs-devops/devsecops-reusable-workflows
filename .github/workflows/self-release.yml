@@ -37,7 +37,8 @@ jobs:
           fi
 
   release:
-    uses: advanced-security/reusable-workflows/.github/workflows/release.yml@v0.1.0
+    # Always pin to main as we aren't sure if the version exisits at this point
+    uses: advanced-security/reusable-workflows/.github/workflows/release.yml@main
     needs: [ fetch-release ]
     if: ${{ needs.fetch-release.outputs.release == 'true' }}
     secrets: inherit
