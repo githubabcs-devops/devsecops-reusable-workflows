@@ -18,7 +18,7 @@ on:
         default: '3.9,3.10,3.11,3.12'
 
 jobs:
-  python-verions:
+  python-versions:
     runs-on: ubuntu-latest
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
@@ -34,12 +34,12 @@ jobs:
 
   python-linting:
     runs-on: ubuntu-latest
-    if: ${{ needs.python-verions.outputs.matrix != '[]' }}
-    needs: [ python-verions ]
+    if: ${{ needs.python-versions.outputs.matrix != '[]' }}
+    needs: [ python-versions ]
     strategy:
       fail-fast: false
       matrix:
-        python-version: ${{ fromJson(needs.python-verions.outputs.matrix) }}
+        python-version: ${{ fromJson(needs.python-versions.outputs.matrix) }}
 
     steps:
       - name: Checkout
