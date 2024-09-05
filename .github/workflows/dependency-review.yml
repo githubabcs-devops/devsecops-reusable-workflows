@@ -38,7 +38,7 @@ jobs:
             echo "No local configuration file found"
             echo "Using configuration file from advanced-security/reusable-workflows repository"
 
-            echo "config=advanced-security/reusable-workflows/.github/dependency-review.yml@main" >> $GITHUB_STATE
+            echo "config=advanced-security/reusable-workflows/.github/dependency-review.yml@v0.1.0" >> $GITHUB_STATE
 
           fi
 
@@ -46,6 +46,6 @@ jobs:
         uses: actions/dependency-review-action@v4
         with:
           # this value can also be hardcoded to a remote repository
-          # Example: advanced-security/reusable-workflows/.github/dependency-review.yml@main
+          # Example: advanced-security/reusable-workflows/.github/dependency-review.yml@v0.1.0
           config-file: ${{ steps.config.outputs.config }}
           comment-summary-in-pr: "always"
