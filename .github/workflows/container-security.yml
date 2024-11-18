@@ -46,6 +46,8 @@ jobs:
         with:
           file: "${{ inputs.container-file }}"
           context: .
+          load: true
+          push: false
           tags: localbuild/testimage:latest
 
       # Scan the image for vulnerabilities
