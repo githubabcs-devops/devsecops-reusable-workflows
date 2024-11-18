@@ -53,13 +53,14 @@ jobs:
         with:
           file: "${{ inputs.container-file }}"
           context: .
+          tags: ${{ inputs.container-name }}:latest
 
       # Scan the image for vulnerabilities
       - name: Run the Anchore / Grype scan action
         uses: anchore/scan-action@f2ba85e044c8f5e5014c9a539328a9c78d3bfa49 # v5.2.1
         id: scan
         with:
-          image: "${{ env.REGISTRY }}/${{ inputs.container-name }}:${{ steps.build.outputs.digest }}"
+          image: "${{ inputs.container-name }}:latest"
           only-fixed: true
           fail-build: ${{ inputs.scanning-block }}
 
