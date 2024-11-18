@@ -54,7 +54,7 @@ jobs:
   set-version:
     runs-on: ubuntu-latest
     outputs:
-      release: ${{ steps.check_release.outputs.release }}
+      release: ${{ steps.set-version.outputs.release }}
       version: ${{ steps.set-version.outputs.version }}
 
     steps:
