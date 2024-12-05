@@ -39,7 +39,7 @@ jobs:
 
             git clone \
               --depth 1 \
-              https://github.com/github/codeql.git\
+              https://github.com/github/codeql.git \
               "$CODEQL_REPOSITORY_PATH"
           fi
 
@@ -83,7 +83,7 @@ jobs:
               ../ql-for-ql-db \
               $CODEQL_SUITE
 
-          echo "sarif=[$matrix]" >> "$GITHUB_OUTPUT"
+          echo "sarif=$SARIF_FILE" >> "$GITHUB_OUTPUT"
                 
       - name: Upload SARIF file
         uses: github/codeql-action/upload-sarif@v3
