@@ -15,7 +15,10 @@ on:
         description: 'Python versions to test against'
         type: string
         # All Major versions of Python that are currently supported
-        default: '3.9,3.10,3.11,3.12'
+        default: '3.9,3.10,3.11,3.12,3.13'
+
+permissions:
+  contents: read
 
 jobs:
   python-versions:
