@@ -11,7 +11,6 @@ on:
           - patch
           - minor
           - major
-
   workflow_call:
     inputs:
       version:
@@ -19,25 +18,27 @@ on:
         required: true
         type: string
 
-permissions:
-  contents: write
-
 jobs:
   release-next:
     runs-on: ubuntu-latest
     # If the workflow was triggered by workflow_dispatch
     if: ${{ github.event_name == 'workflow_dispatch' }}
+
+    permissions:
+      contents: write
+      pull-requests: write
+
     steps:
       - name: "Checkout"
         uses: actions/checkout@v3
 
       - name: "Patch Release Me"
-        uses: 42ByteLabs/patch-release-me@0.3.0
+        uses: 42ByteLabs/patch-release-me@f950db6bce09f2156a5f2d1cc86ac60ed1663a9e    # 0.5.3
         with:
           mode: ${{ github.event.inputs.bump }}
 
       - name: "Create Release"
-        uses: peter-evans/create-pull-request@v6
+        uses: peter-evans/create-pull-request@271a8d0340265f705b14b6d32b9829c1cb33d45e # v7.0.8
         with:
           token: ${{ github.token }}
           commit-message: "[chore]: Create release for ${{ github.event.inputs.version }}"
@@ -52,11 +53,15 @@ jobs:
     runs-on: ubuntu-latest
     # If the workflow was triggered by a workflow call and the version is not null
     if: ${{ github.event_name == 'workflow_call' && github.event.inputs.version != null }}
+
+    permissions:
+      contents: write
+
     steps:
       # https://github.com/peter-murray/semver-data-action
       - name: Parse SemVer
         id: version
-        uses: peter-murray/semver-action@v1
+        uses: peter-murray/semver-action@5a07021b987a48fb9129231397615329ad74703c # v1.0.1
         with:
           version: ${{ inputs.version }}
 
