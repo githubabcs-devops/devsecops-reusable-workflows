@@ -9,12 +9,13 @@ on:
 
 permissions:
   contents: read
+  actions: write
   security-events: write
 
 env:
   # Release version of Opengrep
   # https://github.com/opengrep/opengrep/releases
-  RELEASE_VERSION: v1.0.0-alpha.13
+  RELEASE_VERSION: v1.0.2
 
 jobs:
   build:
