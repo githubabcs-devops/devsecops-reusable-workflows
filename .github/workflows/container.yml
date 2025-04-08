@@ -17,11 +17,6 @@ on:
         type: string
         default: "${{ github.repository }}"
 
-      signing:
-        description: "Sign the image"
-        type: string
-        default: "false"
-
       publish:
         description: "Publish the image to the registry"
         type: string
@@ -108,4 +103,3 @@ jobs:
       container-file: ${{ inputs.container-file }}
       container-name: ${{ inputs.container-name }}
       sbom: ${{ inputs.sbom }}
-      signing: ${{ inputs.signing }}
