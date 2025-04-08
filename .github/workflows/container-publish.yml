@@ -22,14 +22,10 @@ on:
         description: "Generate and upload SBOM"
         type: string
         default: "true"
-      
-      signing:
-        description: "Sign the image"
-        type: string
-        default: "false"
 
 env:
   REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ inputs.container-name }}
 
 jobs:
   publish-image:
@@ -39,8 +35,8 @@ jobs:
       # to upload SBOM
       id-token: write
       contents: write
-      # to upload Docker image
-      packages: write
+      packages: write          # to upload Docker image
+      attestations: write      # Upload attestations
 
     steps:
       - name: Checkout repository
@@ -60,7 +56,7 @@ jobs:
         uses: docker/metadata-action@902fa8ec7d6ecbf8d84d538b9b233a880e428804
         id: meta
         with:
-          images: ${{ env.REGISTRY }}/${{ inputs.container-name }}
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
             # latest / main
             type=raw,value=latest,enable=${{ github.ref == format('refs/heads/{0}', 'main') }}
@@ -70,7 +66,7 @@ jobs:
             type=semver,pattern=v{{major}},value=${{ inputs.version }}
             type=semver,pattern=v{{major}}.{{minor}},value=${{ inputs.version }}
     
-      - name: Build & Publish Container ${{ inputs.container-name }}
+      - name: Build & Publish Container ${{ env.IMAGE_NAME }}
         uses: docker/build-push-action@471d1dc4e07e5cdedd4c2171150001c434f0b7a4 # v6.15.0
         id: build
         with:
@@ -89,35 +85,15 @@ jobs:
           filePath: '.'
           filePattern: '*.spdx.json'
 
-  sign-image:
-    runs-on: ubuntu-latest
-    needs: publish-image
-    # Sign the image only if it is being published
-    if: ${{ inputs.signing == 'true' }}
-
-    permissions:
-      # read the image from GitHub Container Registry
-      packages: read
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-      
-      - uses: sigstore/cosign-installer@d7d6bc7722e3daa8354c50bcb52f4837da5e9b6a # v3.8.1
+      # Build provenance attestations
+      - name: Attest Container Image
+        uses: actions/attest-build-provenance@c074443f1aee8d4aeeae555aebba3282517141b2  # v2.2.3
         with:
-          cosign-release: 'v2.4.1'
+          subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          subject-digest: ${{ steps.push.outputs.digest }}
+          push-to-registry: true
 
-      - name: Log in to the Container registry
-        uses: docker/login-action@74a5d142397b4f367a81961eba4e8cd7edddf772 # v3.4.0
+      - name: Attest Container SBOM
+        uses: actions/attest-build-provenance@c074443f1aee8d4aeeae555aebba3282517141b2  # v2.2.3
         with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Sign the published container
-        # This step uses the identity token to provision an ephemeral certificate against 
-        # the sigstore community Fulcio instance.
-        run: |
-          cosign sign --yes \
-            ${{ env.IMAGE_NAME }}@${{ needs.build-publish-image.outputs.digest }}
-  
+          subject-path:: '*.spdx.json'
