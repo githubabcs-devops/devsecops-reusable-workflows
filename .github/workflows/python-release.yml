@@ -2,7 +2,6 @@
 name: Python - Release
 
 on:
-  push:
   workflow_call:
     inputs:
       version:
