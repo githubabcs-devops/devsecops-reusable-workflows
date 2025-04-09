@@ -105,6 +105,11 @@ jobs:
 
           echo "sarif=$SARIF_FILE" >> "$GITHUB_OUTPUT"
                 
+      - name: Update SARIF file tool name
+        run: |
+          jq '.runs[].tool.driver.name = "CodeQL-Extractor"' ${{ steps.run_ql.outputs.sarif }} > updated_sarif.sarif
+          mv updated_sarif.sarif ${{ steps.run_ql.outputs.sarif }}
+
       - name: Upload SARIF file
         uses: github/codeql-action/upload-sarif@v3
         with:
