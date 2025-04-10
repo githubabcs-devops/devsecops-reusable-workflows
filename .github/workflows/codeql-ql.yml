@@ -107,7 +107,7 @@ jobs:
                 
       - name: Update SARIF file tool name
         run: |
-          jq '.runs[].tool.driver.name = "CodeQL-Extractor"' ${{ steps.run_ql.outputs.sarif }} > updated_sarif.sarif
+          jq '.runs[].tool.driver.name = "CodeQL-Community"' ${{ steps.run_ql.outputs.sarif }} > updated_sarif.sarif
           mv updated_sarif.sarif ${{ steps.run_ql.outputs.sarif }}
 
       - name: Upload SARIF file
