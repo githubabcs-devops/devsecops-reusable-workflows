@@ -93,7 +93,7 @@ jobs:
           subject-digest: ${{ steps.push.outputs.digest }}
           push-to-registry: true
 
-      - name: Attest Container SBOM
-        uses: actions/attest-build-provenance@c074443f1aee8d4aeeae555aebba3282517141b2  # v2.2.3
-        with:
-          subject-path:: '*.spdx.json'
+      # - name: Attest Container SBOM
+      #   uses: actions/attest-build-provenance@c074443f1aee8d4aeeae555aebba3282517141b2  # v2.2.3
+      #   with:
+      #     subject-path:: '*.spdx.json'
