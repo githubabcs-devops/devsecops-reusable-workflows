@@ -17,11 +17,6 @@ on:
         type: string
         default: "${{ github.repository }}"
 
-      signing:
-        description: "Sign the image"
-        type: string
-        default: "false"
-
       publish:
         description: "Publish the image to the registry"
         type: string
@@ -56,6 +51,10 @@ jobs:
     outputs:
       release: ${{ steps.set-version.outputs.release }}
       version: ${{ steps.set-version.outputs.version }}
+
+    permissions:
+      id-token: write
+      contents: read
 
     steps:
       - name: "Checkout"
@@ -92,6 +91,11 @@ jobs:
     uses: advanced-security/reusable-workflows/.github/workflows/container-security.yml@main
     needs: set-version
     secrets: inherit
+    permissions:
+      id-token: write
+      contents: read
+      packages: read           # Read Container Registry
+      security-events: write   # Code Scanning
     with:
       version: ${{ needs.set-version.outputs.version }}
       container-file: ${{ inputs.container-file }}
@@ -103,9 +107,13 @@ jobs:
     needs: [ scan-image, set-version ]
     if: ${{ needs.set-version.outputs.release == 'true' }}
     secrets: inherit
+    permissions:
+      id-token: write
+      contents: write          # Upload SBOM to GitHub
+      packages: write          # Push to Container Registry
+      attestations: write      # Upload attestations
     with:
       version: ${{ needs.set-version.outputs.version }}
       container-file: ${{ inputs.container-file }}
       container-name: ${{ inputs.container-name }}
       sbom: ${{ inputs.sbom }}
-      signing: ${{ inputs.signing }}
