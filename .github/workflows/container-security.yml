@@ -12,6 +12,11 @@ on:
         type: string
         default: "Dockerfile"
 
+      container-context:
+        description: "Build's context is the set of files located in the specified PATH or URL"
+        type: string
+        default: "."
+
       container-name:
         description: "Name of the container"
         type: string
@@ -45,7 +50,7 @@ jobs:
         id: build
         with:
           file: "${{ inputs.container-file }}"
-          context: .
+          context: "${{ inputs.container-context }}"
           load: true
           push: false
           tags: localbuild/testimage:latest

@@ -12,6 +12,11 @@ on:
         type: string
         default: "Dockerfile"
 
+      container-context:
+        description: "Build's context is the set of files located in the specified PATH or URL"
+        type: string
+        default: "."
+
       container-name:
         description: "Name of the container"
         type: string
@@ -101,6 +106,7 @@ jobs:
     with:
       version: ${{ needs.set-version.outputs.version }}
       container-file: ${{ inputs.container-file }}
+      container-context: ${{ inputs.container-context }}
       container-name: ${{ inputs.container-name }}
       scanning-block: ${{ inputs.scanning-block }}
 
@@ -117,5 +123,6 @@ jobs:
     with:
       version: ${{ needs.set-version.outputs.version }}
       container-file: ${{ inputs.container-file }}
+      container-context: ${{ inputs.container-context }}
       container-name: ${{ inputs.container-name }}
       sbom: ${{ inputs.sbom }}
