@@ -6,6 +6,7 @@ on:
 
 permissions:
   contents: write
+  pull-requests: write
 
 jobs:
   fetch-release:
@@ -15,7 +16,7 @@ jobs:
       version: ${{ steps.version-changes.outputs.version }}
     steps:
       - name: "Checkout"
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: "Fetch Release"
         id: version-changes
